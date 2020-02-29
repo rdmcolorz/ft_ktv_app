@@ -1,8 +1,9 @@
 <template>
 <div id="login" class="bg-light" varient='danger'> 
+<b-row>
 <b-jumbotron id="login_box" class="bg-light">
-    <h1 class="topfont">Welcome to ft_KTV</h1>
-    <h5 class="secondfont">Where you get to hear tyang sing</h5>
+    <h1 align="center" class="topfont">Welcome to ft_KTV</h1>
+    <h5 align="center" class="secondfont">Where you get to hear tyang sing</h5>
     <b-form @submit.prevent="login" v-if="show">
       <b-form-group
         id="input-group-1"
@@ -42,6 +43,7 @@
       <pre class="m-0">{{ form }}</pre>
     </b-card>
   </b-jumbotron>
+</b-row>
   </div>
 </template>
 

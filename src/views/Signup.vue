@@ -1,7 +1,8 @@
 <template>
 <div id="signup" class="bg-light"> 
+<b-row>
 <b-jumbotron id="signup_box" class="bg-light">
-    <h1 class="topfont">Create New Account</h1>
+    <h1 align="center" class="topfont">Create New Account</h1>
     <b-form @submit.prevent="onSignUp" v-if="show">
 
       <b-form-group id="input-group-1" label-for="input-1">
@@ -49,6 +50,7 @@
       <pre class="m-0">{{ form }}</pre>
     </b-card>
   </b-jumbotron>
+</b-row>
   </div>
 </template>
 

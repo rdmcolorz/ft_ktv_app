@@ -1,11 +1,14 @@
 <template>
 <div>
-  <b-row align-h="center">
-    <youtube v-if="currSongLink"
-              :video-id="currSongLink" 
+  <b-row v-if="1 > 0" align-h="center">
+    <youtube v-if="currSong.link"
+              :video-id="currSong.link" 
               ref="youtube" 
               @ended="getSong"></youtube>
     <!-- <button @click="playVideo">play</button> -->
+  </b-row>
+  <b-row v-if="1 > 0" align-h="center">
+    <h1>{{ currSong.singer }} is Singing! </h1>
   </b-row>
   <b-row>
       <b-col>
@@ -38,7 +41,7 @@
       <tbody>
         <tr v-for="(video, index) in videoQueue"
             :key="index">
-          <td><a>{{video.id}}</a></td>
+          <td><a>{{video.singer}}</a></td>
           <td>{{video.title}}</td>
         </tr>
       </tbody>
@@ -58,10 +61,13 @@ export default {
   },
   data() {
     return {
-      currSongLink: 'QAsZMcX5Zoc',
+      currSong: {
+        link: 'QAsZMcX5Zoc',
+        singer: 'Taylor'
+      },
       videoQueue: [],
       newSong: {
-        id: '',
+        singer: '',
         title: '',
         link: '',
       },
@@ -77,7 +83,9 @@ export default {
       db.ref(`videoQueue`).limitToFirst(1).once('child_added').then((snapshot) => {
         var key = snapshot.key
         var nextSong = snapshot.val()
-        this.currSongLink = nextSong.link
+        this.currSong.link = nextSong.link
+        this.currSong.singer = nextSong.singer
+        console.log
         db.ref(`videoQueue`).child(key).remove()
       })
       this.playVideo()
@@ -86,14 +94,14 @@ export default {
       return this.$youtube.getIdFromUrl(url)
     },
     addSong() {
-      var id = this.getId(this.newSong.link)
-      if (id) {
-        this.newSong.link = id
+      var songId = this.getId(this.newSong.link)
+      if (songId) {
         var ytApi = "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + 
-                    id + "&key=" + process.env.VUE_APP_YOUTUBE_APIKEY
+                    songId + "&key=" + process.env.VUE_APP_YOUTUBE_APIKEY
         axios.get(ytApi).then((data) => {
-                        this.newSong.id = this.user.data.displayName
+                        this.newSong.singer = this.user.data.displayName
                         this.newSong.title = data.data.items[0].snippet.title;
+                        this.newSong.link = songId
                         db.ref(`videoQueue`).push(this.newSong);
                         })
       }

@@ -36,12 +36,12 @@
         </b-form-group>
 
       <b-row class="justify-content-md-center">
-        <b-col>
-          <b-button block cols="3" type="submit" variant="primary">Sign Up</b-button>
-        </b-col>
-        <b-col align-self="end" style="font-size: 18px; text-align: right; padding: 0px" cols="6">Already have a account?</b-col>
         <b-col cols="3">
-          <b-button block @click="goLogin" variant="outline-secondary">Log In</b-button>
+          <b-button block type="submit" variant="primary">SignUp</b-button>
+        </b-col>
+        <b-col align-self="end" style="font-size: 18px; text-align: right; padding: 0px" cols="6">Have a account?</b-col>
+        <b-col cols="3">
+          <b-button block @click="goLogin" variant="outline-secondary">LogIn</b-button>
         </b-col>
       </b-row>
       

@@ -1,12 +1,13 @@
 <template>
 <div>
-  <b-row v-if="this.user.data.displayName == 'taylor'" align-h="center" varient="dark">
+  <b-row v-if="this.user.data.displayName == 'taylor'" align-h="center">
     <youtube v-if="currSong.link"
               :video-id="currSong.link" 
               ref="youtube" 
               @ended="getSong"></youtube>
     <!-- <button @click="playVideo">play</button> -->
   </b-row>
+  <br>
   <b-row v-if="1 > 0" align-h="center">
     <b-col>
     <h2>🎙️ {{ currSong.singer }} 🎙️ is singing  🎵🎶🎶</h2>
@@ -33,6 +34,7 @@
       </b-form> 
       </b-col>
   </b-row>
+  <br>
     <b-row align-h="center">
       <b-col>
     <table class="table table-dark">
@@ -108,7 +110,7 @@ export default {
     addSong() {
       var songId = this.getId(this.newSong.link)
       if (songId) {
-        var ytApi = "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + 
+        let ytApi = "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + 
                     songId + "&key=" + process.env.VUE_APP_YOUTUBE_APIKEY
         axios.get(ytApi).then((data) => {
                         this.newSong.singer = this.user.data.displayName

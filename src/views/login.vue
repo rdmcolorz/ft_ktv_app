@@ -1,10 +1,12 @@
 <template>
-<div id="login" class="bg-light" varient='danger'> 
+<div id="login" 
+      class="bg-light" 
+      varient='danger'> 
 <b-row>
 <b-jumbotron id="login_box" class="bg-light">
     <h1 align="center" class="topfont">Welcome to ft_KTV</h1>
     <h5 align="center" class="secondfont">Where you get to hear tyang sing</h5>
-    <b-form @submit.prevent="login" v-if="show">
+    <b-form align="center" @submit.prevent="login" v-if="show">
       <b-form-group
         id="input-group-1"
         label-for="input-1"
@@ -29,6 +31,7 @@
         >
         </b-form-input>
       </b-form-group>  
+      <br>
       <h5 class="middle">No password resets.</h5>
       <b-row class="justify-content-md-center">
         <b-col>
@@ -118,15 +121,15 @@
 }
 #login {
   background-color: rgb(202, 34, 34);
-  height: auto;
+  height: 100vw;
 }
 
 #login_box {
-  padding-top: 20px;
+  padding-top: 10px;
   margin: auto;
   margin-top: 55px;
   width: 500px;
   text-align: left;
-  height: 100vw;
+  height: 40vw;
 }
 </style>

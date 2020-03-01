@@ -49,7 +49,8 @@
 
 <script>
 import { db } from "../firebase/db";
-import axios from 'axios'
+import axios from 'axios';
+import { mapGetters } from "vuex";
 
 export default {
   firebase: {
@@ -60,7 +61,7 @@ export default {
       currSongLink: 'QAsZMcX5Zoc',
       videoQueue: [],
       newSong: {
-        id: 'test',
+        id: '',
         title: '',
         link: '',
       },
@@ -88,11 +89,13 @@ export default {
       var id = this.getId(this.newSong.link)
       if (id) {
         this.newSong.link = id
-        axios.get("https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + 
-                    id + "&key=" + process.env.VUE_APP_YOUTUBE_APIKEY).then((data) => {
-                                    this.newSong.title = data.data.items[0].snippet.title;
-                                    db.ref(`videoQueue`).push(this.newSong);
-                                    })
+        var ytApi = "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + 
+                    id + "&key=" + process.env.VUE_APP_YOUTUBE_APIKEY
+        axios.get(ytApi).then((data) => {
+                        this.newSong.id = this.user.data.displayName
+                        this.newSong.title = data.data.items[0].snippet.title;
+                        db.ref(`videoQueue`).push(this.newSong);
+                        })
       }
       else
         alert('Your link does not exist.')
@@ -100,6 +103,9 @@ export default {
     },
   },
   computed: {
+    ...mapGetters({
+      user: "user",
+    }),
     player() {
       return this.$refs.youtube.player
     },

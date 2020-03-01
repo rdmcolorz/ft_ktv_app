@@ -80,7 +80,12 @@
           event.target.classList.add('was-validated');
           var fakeEmail = this.form.username + '@ktv.com'
           Auth.signInWithEmailAndPassword(fakeEmail, this.form.password)
-            .then(() => this.$router.push('/live'))
+            .then(data => {
+              data.user.updateProfile({
+                displayName: this.form.username
+              })
+              this.$router.push('/live')
+              })
             .catch(err => {
               this.errors.push(err.message)
               alert('Ooops Wrong username and password...')

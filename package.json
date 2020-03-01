@@ -13,12 +13,14 @@
     "bootstrap-vue": "^2.5.0",
     "core-js": "^3.6.4",
     "firebase": "^7.9.2",
+    "localforage": "^1.7.3",
     "url-exists": "^1.0.3",
     "vue": "^2.6.11",
     "vue-router": "^3.1.6",
     "vue-youtube": "^1.4.0",
     "vuefire": "^2.2.1",
-    "vuex": "^3.1.2"
+    "vuex": "^3.1.2",
+    "vuex-persist": "^2.2.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.2.0",

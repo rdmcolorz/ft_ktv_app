@@ -3,9 +3,8 @@ import Vuex from 'vuex'
 // import axios from './services/axios-auth'
 import VuePersist from 'vuex-persist'
 import localForage from 'localforage'
-import router from './router'
-import firebase from 'firebase/app'
-import { Auth } from './firebase/auth'
+// import firebase from 'firebase/app'
+// import { Auth } from './firebase/auth'
 
 Vue.use(Vuex)
 
@@ -17,78 +16,38 @@ const vuexStorage = new VuePersist({
 export default new Vuex.Store({
   plugins: [vuexStorage.plugin],
   state: {
-    userId: null,
-    user: null,
-  },
-  mutations: {
-    login(state, userData) {
-      state.userId = userData.uid;
-      state.user = userData.email;
-    },
-    logout(state) {
-      state.userId = '';
-      state.user = ''
+    user: {
+      loggedIn: false,
+      data: null,
     }
   },
-  actions: {
-    login ({commit}, authData) {
-      return new Promise((resolve, reject) => {
-        firebase.auth().signInAndRetrieveDataWithCredential(authData.email, authData.password)
-          .then(() => {
-            firebase.auth().onAuthStateChanged(authUser => {
-              commit('login', authUser);
-              resolve()
-              router.push('/dashboard')
-            });
-          })
-          .catch(err => reject(err.message))
-      })
-      // axios.post(`/verifyPassword?key=${process.env.VUE_APP_FIREBASE_APIKEY}`, {
-      //   email: authData.email,
-      //   password: authData.password,
-      //   returnSecureToken: true
-      // }).then(res => {
-
-      //   const now = new Date()
-      //   const expirationDate = new Date(now.getTime() + res.data.expiresIn * 1000)
-      //   commit('login', {
-      //     token: res.data.idToken,
-      //     userId: res.data.localId,
-      //     expirationDate: expirationDate,
-      //     user: res.data.email
-      //   });
-      //   router.push('/dashboard')
-      // }).catch(error => {
-      //   console.log(error)
-      //   alert('wrong username / password')
-      // })
+  getters: {
+    user(state) {
+      return state.user
+    }
+  },
+  mutations: {
+    SET_LOGGED_IN(state, value) {
+      state.user.loggedIn = value
     },
-    signUp({commit}, user) {
-      return new Promise((resolve, reject) => {
-        firebase
-          .auth()
-          .createUserWithEmailAndPassword(user.email, user.password)
-          .then(() => {
-            firebase.auth().onAuthStateChanged(authUser => {
-              commit('login', authUser);
-              resolve()
-            });
-          })
-          .catch(err => {
-            reject(err.message)
-          })
-      })
+    SET_USER(state, data) {
+      state.user.data = data;
     },
-    logout() {
-      Auth.signOut().then(() => {
-        Auth.onAuthStateChanged(() => {
-          router.push('/login')
-        })
-      })
+    SET_LOGGED_OUT(state) {
+      state.user.userId = '';
+      state.user.username = '';
+      state.user.loggedIn = false;
     },
   },
-  getters: {
-    /* Partially Implemented not for production use */
-    loggedIn: state => !!state.token
-  }
+  actions: {
+    fetchUser ({ commit }, user) {
+      if (user) {
+        commit('SET_USER', {
+          displayName: user.displayName
+        });
+      }
+      else
+        commit('SET_USER', null);
+      }
+    },
 })

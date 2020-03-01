@@ -1,6 +1,6 @@
 <template>
 <div>
-  <b-row v-if="this.user.data.displayName == 'taylor'" align-h="center">
+  <b-row v-if="this.user.data.displayName == 'taylor'" align-h="center" varient="dark">
     <youtube v-if="currSong.link"
               :video-id="currSong.link" 
               ref="youtube" 
@@ -9,8 +9,8 @@
   </b-row>
   <b-row v-if="1 > 0" align-h="center">
     <b-col>
-    <h1>🎙️ {{ currSong.singer }} 🎙️ is singing  🎵🎶🎶</h1>
-    <h2>{{ currSong.title }}</h2>
+    <h2>🎙️ {{ currSong.singer }} 🎙️ is singing  🎵🎶🎶</h2>
+    <h3>{{ currSong.title }}</h3>
     </b-col>
   </b-row>
   <b-row>
@@ -33,20 +33,25 @@
       </b-form> 
       </b-col>
   </b-row>
-    <b-row>
+    <b-row align-h="center">
       <b-col>
-    <table class="table table-striped">
+    <table class="table table-dark">
       <thead>
         <tr>
+          <th>Track</th>
           <th>Singer</th>
           <th>Song</th>
+          <th>Dequeue</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(video, index) in videoQueue"
             :key="index">
-          <td><a>{{video.singer}}</a></td>
-          <td>{{video.title}}</td>
+          <td><a v-if="user.data.displayName == video.singer">⭐</a></td>
+          <td align="center"><a>{{video.singer}}</a></td>
+          <td align="left"><a>{{video.title}}</a></td>
+          <td><button v-show="user.data.displayName == video.singer"
+                      @click="removeQueue(video)">❌</button></td>
         </tr>
       </tbody>
     </table>
@@ -88,10 +93,11 @@ export default {
       console.log("Song ended!")
       db.ref(`videoQueue`).limitToFirst(1).once('child_added').then((snapshot) => {
         var key = snapshot.key
-        var nextSong = snapshot.val()
-        this.currSong.link = nextSong.link
-        this.currSong.singer = nextSong.singer
-        this.currSong.title = nextSong.title
+        this.currSong = snapshot.val()
+
+        // this.currSong.link = nextSong.link
+        // this.currSong.singer = nextSong.singer
+        // this.currSong.title = nextSong.title
         db.ref(`videoQueue`).child(key).remove()
       })
       this.playVideo()
@@ -118,6 +124,9 @@ export default {
         alert('Your link does not exist.')
 
     },
+    removeQueue(video) {
+      db.ref(`videoQueue`).child(video['.key']).remove()
+    }
   },
   computed: {
     ...mapGetters({

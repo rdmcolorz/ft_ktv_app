@@ -1,6 +1,6 @@
 <template>
 <div>
-  <b-row v-if="1 > 0" align-h="center">
+  <b-row v-if="this.user.data.displayName == 'taylor'" align-h="center">
     <youtube v-if="currSong.link"
               :video-id="currSong.link" 
               ref="youtube" 
@@ -8,7 +8,10 @@
     <!-- <button @click="playVideo">play</button> -->
   </b-row>
   <b-row v-if="1 > 0" align-h="center">
-    <h1>{{ currSong.singer }} is Singing! </h1>
+    <b-col>
+    <h1>🎙️ {{ currSong.singer }} 🎙️ is singing  🎵🎶🎶</h1>
+    <h2>{{ currSong.title }}</h2>
+    </b-col>
   </b-row>
   <b-row>
       <b-col>
@@ -31,6 +34,7 @@
       </b-col>
   </b-row>
     <b-row>
+      <b-col>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -46,6 +50,7 @@
         </tr>
       </tbody>
     </table>
+      </b-col>
   </b-row>
 </div>
 </template>
@@ -63,7 +68,8 @@ export default {
     return {
       currSong: {
         link: 'QAsZMcX5Zoc',
-        singer: 'Taylor'
+        singer: 'Taylor',
+        title: 'mozart',
       },
       videoQueue: [],
       newSong: {
@@ -85,7 +91,7 @@ export default {
         var nextSong = snapshot.val()
         this.currSong.link = nextSong.link
         this.currSong.singer = nextSong.singer
-        console.log
+        this.currSong.title = nextSong.title
         db.ref(`videoQueue`).child(key).remove()
       })
       this.playVideo()
@@ -103,11 +109,14 @@ export default {
                         this.newSong.title = data.data.items[0].snippet.title;
                         this.newSong.link = songId
                         db.ref(`videoQueue`).push(this.newSong);
+                        this.newSong.link = '';
+                        this.newSong.title = '';
+                        this.newSong.singer = '';
                         })
       }
       else
         alert('Your link does not exist.')
-      this.newSong.link = '';
+
     },
   },
   computed: {

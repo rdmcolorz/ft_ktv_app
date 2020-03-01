@@ -11,8 +11,7 @@
       <b-col>
       <b-form @submit.prevent="addSong">
         <!-- <b-form-group label-cols-sm="5"> -->
-        <b-col >
-
+        <b-col>
         <b-form-input
           id="input-1"
           v-model="newSong.link"
@@ -38,9 +37,9 @@
       </thead>
       <tbody>
         <tr v-for="(video, index) in videoQueue"
-        :key="index">
-          <td><a v-bind:href="video.url">{{video.id}}</a></td>
-          <td>{{video.link}}</td>
+            :key="index">
+          <td><a>{{video.id}}</a></td>
+          <td>{{video.title}}</td>
         </tr>
       </tbody>
     </table>
@@ -50,6 +49,7 @@
 
 <script>
 import { db } from "../firebase/db";
+import axios from 'axios'
 
 export default {
   firebase: {
@@ -58,8 +58,10 @@ export default {
   data() {
     return {
       currSongLink: 'QAsZMcX5Zoc',
+      videoQueue: [],
       newSong: {
         id: 'test',
+        title: '',
         link: '',
       },
       songQueue: [],
@@ -69,17 +71,11 @@ export default {
     playVideo() {
       this.player.playVideo()
     },
-    cueVideoByUrl() {
-      var url = 'https://www.youtube.com/watch?v=iX_TFkut1PM&list=PLaGei_hbvY498XmqzRZn5chMTQJmsRh-V&index=102'
-      this.player.cueVideoByUrl(url, 4)
-    },
     getSong() {
       console.log("Song ended!")
       db.ref(`videoQueue`).limitToFirst(1).once('child_added').then((snapshot) => {
         var key = snapshot.key
-        console.log(key)
         var nextSong = snapshot.val()
-        console.log(nextSong.link)
         this.currSongLink = nextSong.link
         db.ref(`videoQueue`).child(key).remove()
       })
@@ -92,7 +88,11 @@ export default {
       var id = this.getId(this.newSong.link)
       if (id) {
         this.newSong.link = id
-        db.ref(`videoQueue`).push(this.newSong);
+        axios.get("https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + 
+                    id + "&key=" + process.env.VUE_APP_YOUTUBE_APIKEY).then((data) => {
+                                    this.newSong.title = data.data.items[0].snippet.title;
+                                    db.ref(`videoQueue`).push(this.newSong);
+                                    })
       }
       else
         alert('Your link does not exist.')
@@ -106,7 +106,7 @@ export default {
     playerState() {
       return this.$refs.youtube.playerState
     },
-  }
+  },
 }
 </script>
 

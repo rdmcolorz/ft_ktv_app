@@ -1,4 +1,4 @@
-#ft_ktv web app
+# ft_ktv web app
 For our school karaoke event, I spent two days hacking up this song queueing web app that takes songs from students and queues them up in a dashboard so people don't have to fight over who sings first and for easier tracking of song lists.
 
 I used firebase as backend to handle the signup and authentication, Vue.js as frontend to showcase the embedded Youtube video and queue of songs.

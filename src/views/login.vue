@@ -13,7 +13,7 @@
       >
         <b-form-input
           id="input-1"
-          v-model="form.username" 
+          v-model="form.email" 
           required
           placeholder="Email"
         >
@@ -55,7 +55,7 @@
     data() {
       return {
         form: {
-          username: '',
+          email: '',
           password: '',
         },
         show: true,
@@ -79,8 +79,7 @@
         this.errors = [];
         if (!this.errors.length) {
           event.target.classList.add('was-validated');
-          var fakeEmail = this.form.username + '@ktv.com'
-          auth.signInWithEmailAndPassword(fakeEmail, this.form.password)
+          auth.signInWithEmailAndPassword(this.form.email, this.form.password)
             .then(data => {
               data.user.updateProfile({
                 displayName: this.form.username

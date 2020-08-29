@@ -1,9 +1,13 @@
+// vue router is used to map components to routes so the router know 
+// where to render them.
+ 
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from './views/Login.vue'
 import SignUp from './views/Signup.vue'
 import Live from './views/Live.vue'
 import {auth} from "./firebase/app"
+
 Vue.use(VueRouter)
 
 let router = new VueRouter({

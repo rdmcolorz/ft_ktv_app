@@ -1,3 +1,6 @@
+// haven't really figured out this part, I think i was using it to store
+// the states of users, and in turn effect components based on the states.
+
 import Vue from 'vue'
 import Vuex from 'vuex'
 // import axios from './services/axios-auth'

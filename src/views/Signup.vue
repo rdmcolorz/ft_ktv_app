@@ -1,17 +1,19 @@
 <template>
-<div id="signup" class="bg-light"> 
+<div id="signup" class="bg-light">
+
+<!-- Signup form -->
 <b-row>
-<b-jumbotron id="signup_box" class="bg-light">
+  <b-jumbotron id="signup_box" class="bg-light">
     <h1 align="center" class="topfont">Create New Account</h1>
     <b-form @submit.prevent="onSignUp" v-if="show">
 
       <b-form-group id="input-group-1" label-for="input-1">
         <b-form-input
           id="input-1"
-          v-model="form.username"
+          v-model="form.email"
           type="text"
           required
-          placeholder="Stage name"
+          placeholder="Email"
         ></b-form-input>
       </b-form-group>
 
@@ -21,7 +23,7 @@
           :type="passwordShow"
           v-model="form.password"
           required
-          placeholder="New password"
+          placeholder="Password"
         ></b-form-input>
       </b-form-group>
 
@@ -32,9 +34,47 @@
           name="checkbox-1"
           value="text"
           unchecked-value="password"> Show Password
-          </b-form-checkbox>
-        </b-form-group>
+        </b-form-checkbox>
+      </b-form-group>
 
+      <b-form-group id="input-group-3" label-for="input-3">
+        <b-form-input
+          id="input-3"
+          v-model="form.firstName"
+          type="text"
+          required
+          placeholder="First Name"
+        ></b-form-input>
+      </b-form-group>
+      
+      <!-- checkbox for user type -->
+      <b-form-group id="input-group-3" label-for="input-3">
+        <b-form-input
+          id="input-4"
+          v-model="form.lastName"
+          type="text"
+          required
+          placeholder="Last Name"
+        ></b-form-input>
+      </b-form-group>
+      
+      <b-form-group id="input-group-3" label-for="input-3">
+          <b-form-select v-model="form.sex" :options="sexOptions" class="mb-3">
+          <template v-slot:first>
+            <b-form-select-option :value="null" disabled>Sex</b-form-select-option>
+          </template>
+        </b-form-select>
+      </b-form-group>
+
+      <!-- checkbox for user type -->
+      <b-form-group id="input-group-3">
+        <b-form-radio-group size="lg">
+          <b-form-radio v-model="form.userType" value="s">I'm a student</b-form-radio>
+          <b-form-radio v-model="form.userType" value="t">I'm a teacher</b-form-radio>
+        </b-form-radio-group>
+      </b-form-group>
+
+      <!-- Buttons for submission -->
       <b-row class="justify-content-md-center">
         <b-col cols="3">
           <b-button block type="submit" variant="primary">SignUp</b-button>
@@ -55,8 +95,7 @@
 </template>
 
 <script>
-import { Auth } from '../firebase/auth'
-// import { db } from '../firebase/db'
+import { auth, firestore } from '../firebase/app'
 
   export default {
     // components: {
@@ -64,31 +103,41 @@ import { Auth } from '../firebase/auth'
     // },
     data() {
       return {
-        form: {
-          username: '',
-          password: '',
-        },
+        sexOptions: [
+          {value: 'm', text: 'Male'},
+          {value: 'f', text: 'Female'}
+        ],
         passwordShow: 'password',
+        form: {
+          email: '',
+          password: '',
+          userType: null,
+          sex: null,
+        },
         show: true,
         debug: false,
         errors: [],
       }
     },
-    // firebase: {
-    //   users: db.ref('deviceMeta')
-    // },
     methods: {
       onSignUp(event) {
         this.errors = [];
-        if (this.form.username.length < 5) {
+        if (this.form.email.length < 5) {
           this.errors.push('Your password is not strong enough!')
         }
         if (!this.errors.length) {
           console.log('creat user')
           event.target.classList.add('was-validated');
-          var fakeEmail = this.form.username + '@ktv.com'
-          Auth.createUserWithEmailAndPassword(fakeEmail, this.form.password)
-            .then(() => {
+          auth.createUserWithEmailAndPassword(this.form.email, this.form.password).then(cred => {
+            
+            // populates firestore with user data when they sucessfully sign up.
+            return firestore.collection('users').doc(cred.user.uid).set({
+              userType: this.form.userType,
+              sex: this.form.sex,
+              firstName: this.form.firstName,
+              lastName: this.form.lastName,
+            })
+          }).then(() => {
               console.log('Created user')
               this.$router.push('/')
             }).catch((error) => {

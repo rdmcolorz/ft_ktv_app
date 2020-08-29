@@ -4,8 +4,8 @@
       varient='danger'> 
 <b-row>
 <b-jumbotron id="login_box" class="bg-light">
-    <h1 align="center" class="topfont">Welcome to ft_KTV</h1>
-    <h5 align="center" class="secondfont">Where you get to hear tyang sing</h5>
+    <h1 align="center" class="topfont">Hyphenta</h1>
+    <h5 align="center" class="secondfont">Teaching and learning - Made easier.</h5>
     <b-form align="center" @submit.prevent="login" v-if="show">
       <b-form-group
         id="input-group-1"
@@ -15,11 +15,11 @@
           id="input-1"
           v-model="form.username" 
           required
-          placeholder="Your stage name"
+          placeholder="Email"
         >
         </b-form-input>
       </b-form-group>
-            <b-form-group
+      <b-form-group
         id="input-group-1"
         label-for="input-1"
       >
@@ -31,8 +31,6 @@
         >
         </b-form-input>
       </b-form-group>  
-      <br>
-      <h5 class="middle">No password resets.</h5>
       <b-row class="justify-content-md-center">
         <b-col>
           <b-button block type="submit" variant="danger">Login</b-button>
@@ -51,7 +49,7 @@
 </template>
 
 <script>
-  import { Auth } from '../firebase/auth'
+  import { auth } from '../firebase/app'
 
   export default {
     data() {
@@ -82,7 +80,7 @@
         if (!this.errors.length) {
           event.target.classList.add('was-validated');
           var fakeEmail = this.form.username + '@ktv.com'
-          Auth.signInWithEmailAndPassword(fakeEmail, this.form.password)
+          auth.signInWithEmailAndPassword(fakeEmail, this.form.password)
             .then(data => {
               data.user.updateProfile({
                 displayName: this.form.username

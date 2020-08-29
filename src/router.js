@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from './views/login.vue'
+import Login from './views/Login.vue'
 import SignUp from './views/Signup.vue'
 import Live from './views/Live.vue'
-import {Auth} from "./firebase/auth"
+import {auth} from "./firebase/app"
 Vue.use(VueRouter)
 
 let router = new VueRouter({
@@ -23,14 +23,14 @@ let router = new VueRouter({
       path: '/live',
       name: 'live',
       component: Live,
-      meta: { requiresAuth: true }
+      meta: { requiresauth: true }
     },
   ]
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth) {
-    if (Auth.currentUser) {
+  if (to.meta.requiresauth) {
+    if (auth.currentUser) {
       next();
     } else {
     next({ path: '/' })
